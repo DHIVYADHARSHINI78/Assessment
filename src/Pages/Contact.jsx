@@ -48,23 +48,50 @@ const Contact = () => {
     return '';
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const validationError = validateForm();
     if (validationError) {
       setError(validationError);
       setSuccess('');
-    } else {
-      setError('');
-      setSuccess('Thank you for contact us!');
-      setFormData({
-        name: '',
-        email: '',
-        mobile: '',
-        message: '',
-        captchaa: '',
+      return;
+    }
+
+    try {
+      const response = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          access_key: 'dcef4d89-daa9-47b2-b3d9-044832b1667b',
+          name: formData.name,
+          email: formData.email,
+          mobile: formData.mobile,
+          message: formData.message,
+        }),
       });
-      generateCaptcha(); 
+
+      const result = await response.json();
+
+      if (result.success) {
+        setSuccess('Thank you for contacting us!');
+        setError('');
+        setFormData({
+          name: '',
+          email: '',
+          mobile: '',
+          message: '',
+          captchaa: '',
+        });
+        generateCaptcha();
+      } else {
+        setError('Something went wrong. Please try again later.');
+        setSuccess('');
+      }
+    } catch (err) {
+      setError('Error submitting form. Please check your internet connection.');
+      setSuccess('');
     }
   };
 
@@ -73,15 +100,13 @@ const Contact = () => {
   };
 
   return (
-   
     <section className="min-h-screen bg-blue-100 p-8 flex justify-center items-center">
-       
       <form
         onSubmit={handleSubmit}
-        className="bg-indigo-300 p-10 rounded-lg   space-y-6 border-blue-950 border-2"
+        className="bg-indigo-300 p-10 rounded-lg space-y-6 border-blue-950 border-2 w-full max-w-lg"
       >
-        
-<h2 className="text-2xl font-bold text-blue-700 text-center">Contact Us</h2>
+        <h2 className="text-2xl font-bold text-blue-700 text-center">Contact Us</h2>
+
         <input
           type="text"
           name="name"
@@ -89,6 +114,7 @@ const Contact = () => {
           value={formData.name}
           onChange={handleChange}
           className="w-full p-2 border rounded"
+          required
         />
         <input
           type="email"
@@ -97,6 +123,7 @@ const Contact = () => {
           value={formData.email}
           onChange={handleChange}
           className="w-full p-2 border rounded"
+          required
         />
         <input
           type="text"
@@ -105,6 +132,7 @@ const Contact = () => {
           value={formData.mobile}
           onChange={handleChange}
           className="w-full p-2 border rounded"
+          required
         />
         <textarea
           name="message"
@@ -112,6 +140,7 @@ const Contact = () => {
           value={formData.message}
           onChange={handleChange}
           className="w-full p-2 border rounded resize-none"
+          required
         />
 
         <div className="flex items-center gap-2">
@@ -125,6 +154,7 @@ const Contact = () => {
             value={formData.captchaa}
             onChange={handleChange}
             className="p-1 border rounded w-16 text-center"
+            required
           />
         </div>
 
@@ -133,7 +163,7 @@ const Contact = () => {
 
         <button
           type="submit"
-          className="w-full  bg-indigo-700 text-white py-2 rounded hover:bg-indigo-700"
+          className="w-full bg-indigo-700 text-white py-2 rounded hover:bg-indigo-800 transition"
         >
           Submit
         </button>
