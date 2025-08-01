@@ -7,7 +7,7 @@ const Footer = () => {
       <div className="container mx-auto px-4 text-center">
         <h2 className="text-xl font-semibold text-blue-800">Firebrand Labs</h2>
         <p className="mt-2 text-sm">
-          Firebrand Labs, No. 42, Digital Tech Park, Tidel Street, Chennai – 600113, India.
+             First floor,No 12,1st cross st,karpagam Gardens, Adyar,Chennai ,tamilnadu 600020
         </p>
 
         <div className="flex justify-center space-x-4 mt-4">
@@ -17,7 +17,6 @@ const Footer = () => {
           <Link to="/blog" className="hover:underline">Blog</Link>
         </div>
 
-        <p className="mt-4 text-xs text-gray-300">© {new Date().getFullYear()} Firebrand Labs. All rights reserved.</p>
       </div>
     </footer>
   );
